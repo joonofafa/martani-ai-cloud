@@ -169,4 +169,4 @@ The Data Ops area is structurally present and partially implemented, but some UI
 
 ## License
 
-No open source license has been added yet.
+MIT
