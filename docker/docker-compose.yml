@@ -1,0 +1,67 @@
+# Shared services - MinIO + Ollama + SearXNG
+# All environments (dev/test/prod) share these service instances.
+#
+# Usage:
+#   docker network create martani-shared  # (first time only)
+#   docker compose up -d
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: martani-ollama
+    restart: unless-stopped
+    environment:
+      OLLAMA_NUM_PARALLEL: "2"
+      OLLAMA_MAX_LOADED_MODELS: "2"
+    ports:
+      - "${OLLAMA_PORT:-11434}:11434"
+    volumes:
+      - martani_ollama_data:/root/.ollama
+    cpus: 6
+    mem_limit: 16g
+    networks:
+      - martani-shared
+
+  minio:
+    image: minio/minio:latest
+    container_name: martani-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - /mnt/raidHdd/Cloud:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - martani-shared
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: martani-searxng
+    restart: unless-stopped
+    ports:
+      - "${SEARXNG_PORT:-8888}:8080"
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    environment:
+      SEARXNG_BASE_URL: http://localhost:8888/
+    mem_limit: 512m
+    networks:
+      - martani-shared
+
+volumes:
+  martani_ollama_data:
+    driver: local
+
+networks:
+  martani-shared:
+    name: martani-shared
+    driver: bridge

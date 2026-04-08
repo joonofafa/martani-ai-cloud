@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "login": "Log in",
+    "cta": "The Terraforming"
+  },
+  "hero": {
+    "titlePre": "Build your",
+    "titleHighlight": "intelligent",
+    "titlePost": "infrastructure",
+    "subtitle": "AI conversations, cloud storage, and document analysis — all in one platform. Like building civilization on barren land — build intelligent infrastructure on your data.",
+    "getStarted": "Get Started",
+    "signIn": "Sign in"
+  },
+  "features": {
+    "ai": {
+      "title": "AI-Powered Analytics",
+      "description": "Uploaded documents are indexed with vector embeddings, enabling RAG-based semantic search that truly understands your file contents. AI reads and analyzes files directly, writes notes, and automatically discovers semantic connections across documents.",
+      "learnMore": "Learn More"
+    },
+    "cloud": {
+      "title": "Scalable Cloud Architecture",
+      "description": "Folder management, drag-and-drop uploads, shareable links, and WebDAV access. Per-user storage quotas and plan-based management make it a cloud infrastructure that scales with your needs. Supports file compression, batch operations, and efficient file workflows.",
+      "learnMore": "Learn More"
+    },
+    "assistant": {
+      "title": "AI Personal Assistant",
+      "description": "Schedule management, email sending, note organization, web search, browser automation, data collection, code execution — your AI assistant autonomously handles complex workflows. Persistent memory retains conversation context, and credentials stored in the secure vault are used seamlessly.",
+      "learnMore": "Learn More"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Martani. The Terraforming.",
+    "tagline": "Cloud + AI Infrastructure",
+    "product": {
+      "_title": "Product",
+      "aiAnalytics": "AI Analytics",
+      "cloudStorage": "Cloud Storage",
+      "dataSecurity": "Security Vault",
+      "aiAssistant": "AI Assistant"
+    },
+    "resources": {
+      "_title": "Resources",
+      "getStarted": "Get Started",
+      "login": "Log in",
+      "billing": "Pricing"
+    },
+    "policies": {
+      "_title": "Policies",
+      "terms": "Terms of Service",
+      "privacy": "Privacy Policy",
+      "cookies": "Cookie Policy"
+    },
+    "company": {
+      "_title": "Company",
+      "about": "About",
+      "contact": "Contact"
+    }
+  }
+}

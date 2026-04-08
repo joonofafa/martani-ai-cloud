@@ -1,0 +1,1 @@
+"""OwnCloud WebDAV compatibility layer."""

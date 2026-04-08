@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "cloud": "Cloud",
+    "explorer": "Explorer",
+    "indexing": "Indexing",
+    "vault": "Vault",
+    "ai": "AI",
+    "data": "Mining",
+    "mining": "Mining",
+    "refinery": "Refinery",
+    "bridge": "Bridge",
+    "messenger": "Messenger",
+    "notes": "Notes",
+    "schedule": "Schedule",
+    "assistantName": "Martani",
+    "assistantDesc": "AI Assistant",
+    "close": "Close",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar"
+  },
+  "admin": {
+    "label": "Admin",
+    "dashboard": "Admin Dashboard",
+    "users": "User Management",
+    "settings": "System Settings",
+    "logs": "System Logs"
+  },
+  "user": {
+    "logout": "Logout",
+    "admin": "Admin",
+    "language": "Language",
+    "billing": "Billing"
+  }
+}

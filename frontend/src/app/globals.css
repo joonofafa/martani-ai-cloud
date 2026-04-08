@@ -1,0 +1,221 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pretendard font */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+:root {
+  --foreground-rgb: 249, 250, 251;
+  --background-rgb: 31, 41, 55;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Scrollbar styling (dark theme) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1F2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4B5563;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6B7280;
+}
+
+/* Gradient animation for text */
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 6s ease infinite;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(249, 115, 22, 0.3);
+  color: #F9FAFB;
+}
+
+/* Feature card icon animations (kept for SVG icons) */
+@keyframes heroDash {
+  to { stroke-dashoffset: -40; }
+}
+
+@keyframes heroPulse {
+  0%, 100% { opacity: 0.4; filter: drop-shadow(0 0 3px currentColor); }
+  50% { opacity: 1; filter: drop-shadow(0 0 8px currentColor); }
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.3)); }
+  50% { filter: drop-shadow(0 0 12px rgba(249, 115, 22, 0.6)); }
+}
+
+.hero-dash {
+  stroke-dasharray: 8 12;
+  animation: heroDash 2s linear infinite;
+}
+
+.hero-pulse {
+  animation: heroPulse 3s ease-in-out infinite;
+}
+
+.logo-glow {
+  animation: logoGlow 3s ease-in-out infinite;
+}
+
+/* Logo SVG draw animation */
+@keyframes logoDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes logoFadeIn {
+  from { opacity: 0; }
+  to { opacity: 0.6; }
+}
+
+.logo-draw-outer {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: logoDraw 0.8s ease-out forwards;
+}
+
+.logo-draw-m {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: logoDraw 0.8s ease-out 0.5s forwards;
+}
+
+.logo-draw-diamond {
+  opacity: 0;
+  animation: logoFadeIn 0.3s ease-out 1.3s forwards;
+}
+
+@keyframes iconScan {
+  0% { opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+.icon-scan {
+  animation: iconScan 2.5s ease-in-out infinite;
+}
+
+/* Hero mesh blinking intersection dots */
+@keyframes meshBlink {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  15% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 0.7; transform: scale(2); }
+  85% { opacity: 0; transform: scale(0.5); }
+}
+
+.mesh-blink {
+  opacity: 0;
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: meshBlink 3s ease-in-out infinite;
+}
+
+/* Hero mesh floating glow animations */
+@keyframes meshFloat1 {
+  0%, 100% { transform: translate(-10%, -20%); }
+  25% { transform: translate(30%, 10%); }
+  50% { transform: translate(60%, -10%); }
+  75% { transform: translate(20%, 30%); }
+}
+
+@keyframes meshFloat2 {
+  0%, 100% { transform: translate(80%, 60%); }
+  25% { transform: translate(40%, 20%); }
+  50% { transform: translate(10%, 50%); }
+  75% { transform: translate(60%, 10%); }
+}
+
+@keyframes meshFloat3 {
+  0%, 100% { transform: translate(50%, 40%); }
+  33% { transform: translate(10%, 10%); }
+  66% { transform: translate(70%, 60%); }
+}
+
+.mesh-float-1 { animation: meshFloat1 20s ease-in-out infinite; }
+.mesh-float-2 { animation: meshFloat2 25s ease-in-out infinite; }
+.mesh-float-3 { animation: meshFloat3 18s ease-in-out infinite; }
+
+/* Custom checkbox – dark theme + primary orange */
+input[type="checkbox"].toggle-check {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #4B5563;
+  border-radius: 5px;
+  background: #1F2937;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+input[type="checkbox"].toggle-check:hover {
+  border-color: #F97316;
+  background: rgba(249, 115, 22, 0.08);
+}
+
+input[type="checkbox"].toggle-check:checked {
+  background: #F97316;
+  border-color: #F97316;
+}
+
+input[type="checkbox"].toggle-check:checked::after {
+  content: '';
+  position: absolute;
+  left: 4.5px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+input[type="checkbox"].toggle-check:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.4);
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/*
+ * Mining workflow React Flow: do NOT offset .react-flow__pane with negative left/top.
+ * The canvas sits inside a parent with overflow-hidden; shifting the pane clips content
+ * and nodes can look “invisible”. React also keeps inline top/left on the pane in the DOM;
+ * use the Computed tab to verify any overrides.
+ */
+#workflow-mining-canvas .react-flow__panel {
+  z-index: 30;
+}

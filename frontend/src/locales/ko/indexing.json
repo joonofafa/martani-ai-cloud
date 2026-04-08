@@ -1,0 +1,33 @@
+{
+  "title": "인덱싱",
+  "stats": {
+    "totalFiles": "전체 파일",
+    "completed": "완료",
+    "processing": "처리중",
+    "failed": "실패",
+    "pending": "대기"
+  },
+  "search": "검색",
+  "types": {
+    "all": "전체",
+    "document": "문서",
+    "image": "이미지",
+    "audio": "오디오",
+    "video": "비디오"
+  },
+  "searchModes": {
+    "filename": "파일명",
+    "semantic": "시맨틱"
+  },
+  "searchPlaceholder": {
+    "semantic": "인덱싱된 파일 내용에서 검색...",
+    "filename": "파일명으로 검색..."
+  },
+  "searchButton": "검색",
+  "resultCount": "{{count}}개 결과",
+  "similarity": "유사도 {{value}}%",
+  "home": "홈",
+  "searchError": "검색 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+  "noResults": "검색 결과가 없습니다",
+  "tryAnother": "다른 검색어를 시도해 보세요"
+}

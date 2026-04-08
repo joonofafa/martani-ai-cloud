@@ -1,0 +1,56 @@
+{
+  "title": "스케줄",
+  "weekView": "주간 보기",
+  "today": "오늘",
+  "prevWeek": "이전 주",
+  "nextWeek": "다음 주",
+  "addTask": "작업 추가",
+  "noTasks": "이번 주에 예정된 작업이 없습니다",
+  "taskDialog": {
+    "title": "작업 상세",
+    "addTitle": "작업 추가",
+    "name": "작업 이름",
+    "namePlaceholder": "선택사항 (AI가 자동 생성)",
+    "prompt": "작업 설명",
+    "promptPlaceholder": "AI가 수행할 작업을 설명하세요...",
+    "scheduledAt": "실행 날짜 및 시간",
+    "repeat": "반복",
+    "repeatNone": "없음",
+    "repeatDaily": "매일",
+    "repeatWeekly": "매주",
+    "repeatMonthly": "매월",
+    "enabled": "활성화",
+    "analyze": "분석",
+    "analyzing": "분석 중...",
+    "add": "추가",
+    "save": "저장",
+    "delete": "삭제",
+    "close": "닫기",
+    "notActionable": "이 텍스트는 실행 가능한 작업으로 변환할 수 없습니다",
+    "deleteConfirm": "\"{{name}}\" 작업을 삭제하시겠습니까?"
+  },
+  "cancel": "취소",
+  "context": {
+    "sendToAI": "AI에게 전달",
+    "edit": "작업 수정",
+    "delete": "삭제"
+  },
+  "status": {
+    "pending": "대기중",
+    "running": "실행중",
+    "completed": "완료",
+    "failed": "실패"
+  },
+  "tools": {
+    "web_search": "웹 검색",
+    "send_mail": "메일 발송",
+    "browser_navigate": "브라우저",
+    "create_text_file": "파일 생성",
+    "list_files": "파일 목록",
+    "create_note": "메모 생성",
+    "create_event": "캘린더",
+    "execute_python": "Python",
+    "execute_javascript": "JavaScript",
+    "create_collection_task": "데이터 수집"
+  }
+}

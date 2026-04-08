@@ -1,0 +1,155 @@
+# Production environment
+# Usage: docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+
+x-backend-env: &backend-env
+  ENVIRONMENT: ${ENVIRONMENT:-production}
+  DATABASE_URL: postgresql+asyncpg://${DB_USER:-cloudai}:${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}@postgres:5432/${DB_NAME:-martani_prod}
+  REDIS_URL: redis://redis:6379
+  JWT_SECRET: ${JWT_SECRET}
+  SECRET_KEY: ${SECRET_KEY:-${JWT_SECRET}}
+  MINIO_ENDPOINT: minio:9000
+  MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+  MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+  MINIO_BUCKET: martani-storage
+  MINIO_SECURE: "false"
+  LLM_PROVIDER: ${LLM_PROVIDER:-openrouter}
+  CHAT_USE_CELERY: "true"
+  SEARXNG_URL: http://searxng:8080
+  FIREWORKS_API_KEY: ${FIREWORKS_API_KEY:-}
+  FIREWORKS_ACCOUNT_ID: ${FIREWORKS_ACCOUNT_ID:-}
+
+x-backend-depends: &backend-depends
+  postgres:
+    condition: service_healthy
+  redis:
+    condition: service_healthy
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: martani-prod-postgres
+    restart: unless-stopped
+    command: >
+      postgres
+      -c max_connections=200
+      -c idle_in_transaction_session_timeout=30000
+      -c statement_timeout=300000
+    environment:
+      POSTGRES_USER: ${DB_USER:-cloudai}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-martani_prod}
+    ports:
+      - "${DB_PORT:-5434}:5432"
+    volumes:
+      - martani_prod_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-cloudai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - martani-prod
+
+  redis:
+    image: redis:7-alpine
+    container_name: martani-prod-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6381}:6379"
+    volumes:
+      - martani_prod_redis:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - martani-prod
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    image: martani-backend:prod
+    container_name: martani-prod-backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8020}:8000"
+    volumes:
+      - ../backend:/app
+      - /mnt/raidHdd:/mnt/raidHdd:ro
+    environment:
+      <<: *backend-env
+      FRONTEND_URL: ${FRONTEND_URL:-https://www.martani.cloud}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-}
+    depends_on: *backend-depends
+    networks:
+      - martani-prod
+      - martani-shared
+
+  celery-worker:
+    image: martani-backend:prod
+    container_name: martani-prod-celery-worker
+    restart: unless-stopped
+    command: celery -A app.core.celery_app:celery_app worker --beat --loglevel=info --concurrency=2
+    volumes:
+      - ../backend:/app
+    environment:
+      <<: *backend-env
+    depends_on: *backend-depends
+    networks:
+      - martani-prod
+      - martani-shared
+
+  celery-chat-worker:
+    image: martani-backend:prod
+    container_name: martani-prod-celery-chat-worker
+    restart: unless-stopped
+    command: celery -A app.core.celery_app:celery_app worker --loglevel=info --concurrency=4 -Q chat
+    volumes:
+      - ../backend:/app
+    environment:
+      <<: *backend-env
+    depends_on: *backend-depends
+    networks:
+      - martani-prod
+      - martani-shared
+
+  frontend:
+    image: node:20-alpine
+    container_name: martani-prod-frontend
+    working_dir: /app
+    ports:
+      - "${FRONTEND_PORT:-3020}:3000"
+    volumes:
+      - ../frontend:/app
+      - martani_prod_node_modules:/app/node_modules
+      - martani_prod_next_build:/app/.next
+    environment:
+      # Unset → frontend uses relative /api/v1 paths; Apache proxies to backend
+      NEXT_PUBLIC_API_URL: ""
+      NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
+      HOSTNAME: "0.0.0.0"
+    command: sh -c "npm install && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public 2>/dev/null; node .next/standalone/server.js"
+    depends_on:
+      - backend
+    networks:
+      - martani-prod
+
+volumes:
+  martani_prod_postgres:
+    external: true
+    name: martani-prod_martani_prod_postgres
+  martani_prod_redis:
+    driver: local
+  martani_prod_node_modules:
+    driver: local
+  martani_prod_next_build:
+    driver: local
+
+networks:
+  martani-prod:
+    driver: bridge
+  martani-shared:
+    external: true

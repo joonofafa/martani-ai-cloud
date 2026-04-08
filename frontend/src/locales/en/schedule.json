@@ -1,0 +1,56 @@
+{
+  "title": "Schedule",
+  "weekView": "Weekly View",
+  "today": "Today",
+  "prevWeek": "Previous Week",
+  "nextWeek": "Next Week",
+  "addTask": "Add Task",
+  "noTasks": "No tasks scheduled this week",
+  "taskDialog": {
+    "title": "Task Details",
+    "addTitle": "Add Task",
+    "name": "Task Name",
+    "namePlaceholder": "Optional (AI will generate)",
+    "prompt": "Task Description",
+    "promptPlaceholder": "Describe what the AI should do...",
+    "scheduledAt": "Scheduled Date & Time",
+    "repeat": "Repeat",
+    "repeatNone": "None",
+    "repeatDaily": "Daily",
+    "repeatWeekly": "Weekly",
+    "repeatMonthly": "Monthly",
+    "enabled": "Enabled",
+    "analyze": "Analyze",
+    "analyzing": "Analyzing...",
+    "add": "Add",
+    "save": "Save",
+    "delete": "Delete",
+    "close": "Close",
+    "notActionable": "This text cannot be converted to an actionable task",
+    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"?"
+  },
+  "cancel": "Cancel",
+  "context": {
+    "sendToAI": "Send to AI",
+    "edit": "Edit Task",
+    "delete": "Delete"
+  },
+  "status": {
+    "pending": "Pending",
+    "running": "Running",
+    "completed": "Completed",
+    "failed": "Failed"
+  },
+  "tools": {
+    "web_search": "Web Search",
+    "send_mail": "Send Mail",
+    "browser_navigate": "Browser",
+    "create_text_file": "Create File",
+    "list_files": "File List",
+    "create_note": "Create Note",
+    "create_event": "Calendar",
+    "execute_python": "Python",
+    "execute_javascript": "JavaScript",
+    "create_collection_task": "Data Collection"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "title": "Billing",
+  "currentPlan": "Current Plan",
+  "tokenUsage": "Token Usage",
+  "storageUsage": "Storage Usage",
+  "resetDate": "Next Reset",
+  "plans": {
+    "basic": "Basic",
+    "pro": "Pro"
+  },
+  "tokensPerMonth": "tokens/month",
+  "storage": "Storage",
+  "changePlan": "Change",
+  "currentBadge": "Current",
+  "confirmChange": "Change your plan to {{plan}}?",
+  "confirmChangeDesc": "Your token limit and storage quota will be updated to the new plan.",
+  "confirm": "Change",
+  "cancel": "Cancel",
+  "changeSuccess": "Plan changed successfully.",
+  "changeError": "Failed to change plan.",
+  "used": "used",
+  "of": "/",
+  "unlimited": "Unlimited"
+}

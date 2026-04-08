@@ -1,0 +1,33 @@
+{
+  "title": "Indexing",
+  "stats": {
+    "totalFiles": "Total Files",
+    "completed": "Completed",
+    "processing": "Processing",
+    "failed": "Failed",
+    "pending": "Pending"
+  },
+  "search": "Search",
+  "types": {
+    "all": "All",
+    "document": "Documents",
+    "image": "Images",
+    "audio": "Audio",
+    "video": "Video"
+  },
+  "searchModes": {
+    "filename": "Filename",
+    "semantic": "Semantic"
+  },
+  "searchPlaceholder": {
+    "semantic": "Search indexed file contents...",
+    "filename": "Search by filename..."
+  },
+  "searchButton": "Search",
+  "resultCount": "{{count}} results",
+  "similarity": "{{value}}% match",
+  "home": "Home",
+  "searchError": "An error occurred during search. Please try again later.",
+  "noResults": "No results found",
+  "tryAnother": "Try a different search term"
+}

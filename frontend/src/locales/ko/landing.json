@@ -1,0 +1,59 @@
+{
+  "nav": {
+    "login": "Log in",
+    "cta": "The Terraforming"
+  },
+  "hero": {
+    "titlePre": "Build your",
+    "titleHighlight": "intelligent",
+    "titlePost": "infrastructure",
+    "subtitle": "AI 대화, 클라우드 스토리지, 문서 분석을 하나의 플랫폼으로. 황무지 위에 문명을 세우듯 — 당신의 데이터 위에 지능형 인프라를 구축하세요.",
+    "getStarted": "Get Started",
+    "signIn": "Sign in"
+  },
+  "features": {
+    "ai": {
+      "title": "AI-Powered Analytics",
+      "description": "업로드한 문서를 벡터 임베딩으로 색인하고, RAG 기반 시멘틱 검색으로 파일 내용을 정확히 이해합니다. AI가 파일을 직접 읽고 분석하며, 메모를 작성하고, 문서 간 의미적 연결을 자동으로 찾아냅니다.",
+      "learnMore": "Learn More"
+    },
+    "cloud": {
+      "title": "Scalable Cloud Architecture",
+      "description": "폴더 관리, 드래그 앤 드롭 업로드, 공유 링크, WebDAV 접근을 제공합니다. 사용자별 용량 할당과 플랜 기반 관리로 필요에 따라 확장 가능한 클라우드 인프라입니다. 파일 압축/해제, 일괄 이동 등 효율적인 파일 작업을 지원합니다.",
+      "learnMore": "Learn More"
+    },
+    "assistant": {
+      "title": "AI Personal Assistant",
+      "description": "스케줄 관리, 이메일 발송, 메모 정리, 웹 검색, 브라우저 자동화, 데이터 수집, 코드 실행까지 — AI 비서가 복잡한 업무를 자율적으로 수행합니다. 영구 메모리로 대화 맥락을 기억하고, 보안 금고에 저장된 인증 정보를 활용합니다.",
+      "learnMore": "Learn More"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Martani. The Terraforming.",
+    "tagline": "Cloud + AI Infrastructure",
+    "product": {
+      "_title": "제품",
+      "aiAnalytics": "AI 분석",
+      "cloudStorage": "클라우드 스토리지",
+      "dataSecurity": "보안관",
+      "aiAssistant": "AI 비서"
+    },
+    "resources": {
+      "_title": "리소스",
+      "getStarted": "시작하기",
+      "login": "로그인",
+      "billing": "요금제"
+    },
+    "policies": {
+      "_title": "정책",
+      "terms": "이용약관",
+      "privacy": "개인정보처리방침",
+      "cookies": "쿠키 정책"
+    },
+    "company": {
+      "_title": "회사",
+      "about": "소개",
+      "contact": "문의"
+    }
+  }
+}

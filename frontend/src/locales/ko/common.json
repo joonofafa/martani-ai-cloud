@@ -1,0 +1,34 @@
+{
+  "nav": {
+    "cloud": "클라우드",
+    "explorer": "탐색기",
+    "indexing": "인덱싱",
+    "vault": "보안관",
+    "ai": "인공지능",
+    "data": "마이닝",
+    "mining": "수집소",
+    "refinery": "정제소",
+    "bridge": "브릿지",
+    "messenger": "메신저",
+    "notes": "메모장",
+    "schedule": "스케줄",
+    "assistantName": "마타니",
+    "assistantDesc": "비서 AI",
+    "close": "닫기",
+    "expandSidebar": "사이드바 확장",
+    "collapseSidebar": "사이드바 축소"
+  },
+  "admin": {
+    "label": "관리자",
+    "dashboard": "관리자 대시보드",
+    "users": "사용자 관리",
+    "settings": "시스템 설정",
+    "logs": "시스템 로그"
+  },
+  "user": {
+    "logout": "로그아웃",
+    "admin": "관리자",
+    "language": "언어",
+    "billing": "요금제"
+  }
+}

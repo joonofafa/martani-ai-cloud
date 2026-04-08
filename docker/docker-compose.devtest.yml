@@ -1,0 +1,169 @@
+# DevTest unified environment (runs on Guest VM: UbuntuDevTest)
+# MinIO and Ollama are hosted on the host server — accessed via HOST_SERVER_IP.
+#
+# Usage:
+#   docker compose -f docker-compose.devtest.yml --env-file .env.devtest up -d
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: martani-devtest-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-cloudai}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-martani_devtest}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - martani_devtest_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-cloudai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - martani-devtest
+
+  redis:
+    image: redis:7-alpine
+    container_name: martani-devtest-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - martani_devtest_redis:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - martani-devtest
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: martani-devtest-backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ../backend:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-cloudai}:${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}@postgres:5432/${DB_NAME:-martani_devtest}
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: ${HOST_SERVER_IP:-192.168.122.1}:${MINIO_PORT:-9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+      MINIO_BUCKET: martani-storage
+      MINIO_SECURE: "false"
+      OLLAMA_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${OLLAMA_PORT:-11434}
+      WHISPER_SERVER_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${WHISPER_PORT:-8178}
+      JWT_SECRET: devtest-jwt-secret-change-in-production
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      LLM_PROVIDER: ${LLM_PROVIDER:-openrouter}
+      CHAT_USE_CELERY: "true"
+      SEARXNG_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${SEARXNG_PORT:-8888}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - martani-devtest
+
+  celery-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: martani-devtest-celery-worker
+    restart: unless-stopped
+    command: celery -A app.core.celery_app:celery_app worker --beat --loglevel=info --concurrency=2
+    volumes:
+      - ../backend:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-cloudai}:${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}@postgres:5432/${DB_NAME:-martani_devtest}
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: ${HOST_SERVER_IP:-192.168.122.1}:${MINIO_PORT:-9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+      MINIO_BUCKET: martani-storage
+      MINIO_SECURE: "false"
+      OLLAMA_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${OLLAMA_PORT:-11434}
+      WHISPER_SERVER_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${WHISPER_PORT:-8178}
+      LLM_PROVIDER: ${LLM_PROVIDER:-openrouter}
+      CHAT_USE_CELERY: "true"
+      SEARXNG_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${SEARXNG_PORT:-8888}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - martani-devtest
+
+  celery-chat-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: martani-devtest-celery-chat-worker
+    restart: unless-stopped
+    command: celery -A app.core.celery_app:celery_app worker --loglevel=info --concurrency=4 -Q chat
+    volumes:
+      - ../backend:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-cloudai}:${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}@postgres:5432/${DB_NAME:-martani_devtest}
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: ${HOST_SERVER_IP:-192.168.122.1}:${MINIO_PORT:-9000}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+      MINIO_BUCKET: martani-storage
+      MINIO_SECURE: "false"
+      OLLAMA_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${OLLAMA_PORT:-11434}
+      WHISPER_SERVER_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${WHISPER_PORT:-8178}
+      LLM_PROVIDER: ${LLM_PROVIDER:-openrouter}
+      CHAT_USE_CELERY: "true"
+      SEARXNG_URL: http://${HOST_SERVER_IP:-192.168.122.1}:${SEARXNG_PORT:-8888}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - martani-devtest
+
+  frontend:
+    image: node:20-alpine
+    container_name: martani-devtest-frontend
+    working_dir: /app
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ../frontend:/app
+      - martani_devtest_node_modules:/app/node_modules
+      - martani_devtest_next_build:/app/.next
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:${BACKEND_PORT:-8000}
+      HOSTNAME: "0.0.0.0"
+    command: sh -c "npm install && npm run dev -- -p 3000"
+    depends_on:
+      - backend
+    networks:
+      - martani-devtest
+
+volumes:
+  martani_devtest_postgres:
+    driver: local
+  martani_devtest_redis:
+    driver: local
+  martani_devtest_node_modules:
+    driver: local
+  martani_devtest_next_build:
+    driver: local
+
+networks:
+  martani-devtest:
+    driver: bridge

@@ -1,0 +1,24 @@
+{
+  "title": "요금제",
+  "currentPlan": "현재 요금제",
+  "tokenUsage": "토큰 사용량",
+  "storageUsage": "저장 공간 사용량",
+  "resetDate": "다음 초기화",
+  "plans": {
+    "basic": "Basic",
+    "pro": "Pro"
+  },
+  "tokensPerMonth": "토큰/월",
+  "storage": "저장 공간",
+  "changePlan": "변경",
+  "currentBadge": "현재 플랜",
+  "confirmChange": "요금제를 {{plan}}(으)로 변경하시겠습니까?",
+  "confirmChangeDesc": "토큰 한도와 저장 공간이 새 요금제 기준으로 변경됩니다.",
+  "confirm": "변경",
+  "cancel": "취소",
+  "changeSuccess": "요금제가 변경되었습니다.",
+  "changeError": "요금제 변경에 실패했습니다.",
+  "used": "사용",
+  "of": "/",
+  "unlimited": "무제한"
+}

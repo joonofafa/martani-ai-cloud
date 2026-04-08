@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+/lib/
+/lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+ENV/
+
+# Node
+node_modules/
+.next/
+out/
+.nuxt/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+docker/.env.prod
+docker/.env.dev
+docker/.env.test
+docker/.env.devtest
+
+# Local agent / audit files
+.claude/settings.local.json
+.claude/claude.md
+.claude/secure.md
+.claude/critical.md
+.claude/skill.md
+SECURITY_REVIEW_REPORT_*.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+
+# Docker
+*.log
+
+# Celery
+celerybeat-schedule
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# Uploads
+uploads/

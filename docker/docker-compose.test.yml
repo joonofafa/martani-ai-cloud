@@ -1,0 +1,163 @@
+# Test environment
+# Usage: docker compose -f docker-compose.test.yml --env-file .env.test up -d
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: martani-test-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-cloudai}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-martani_test}
+    ports:
+      - "${DB_PORT:-5435}:5432"
+    volumes:
+      - martani_test_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-cloudai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - martani-test
+
+  redis:
+    image: redis:7-alpine
+    container_name: martani-test-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6380}:6379"
+    volumes:
+      - martani_test_redis:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - martani-test
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: martani-test-backend
+    restart: unless-stopped
+    ports:
+      - "${BACKEND_PORT:-8010}:8000"
+    volumes:
+      - ../backend:/app
+      - /mnt/raidHdd:/mnt/raidHdd:ro
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-cloudai}:${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}@postgres:5432/${DB_NAME:-martani_test}
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+      MINIO_BUCKET: martani-storage
+      MINIO_SECURE: "false"
+      JWT_SECRET: test-jwt-secret-change-in-production
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3010}
+      LLM_PROVIDER: ${LLM_PROVIDER:-openrouter}
+      CHAT_USE_CELERY: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - martani-test
+      - martani-shared
+
+  celery-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: martani-test-celery-worker
+    restart: unless-stopped
+    command: celery -A app.core.celery_app:celery_app worker --beat --loglevel=info --concurrency=2
+    volumes:
+      - ../backend:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-cloudai}:${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}@postgres:5432/${DB_NAME:-martani_test}
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+      MINIO_BUCKET: martani-storage
+      MINIO_SECURE: "false"
+      LLM_PROVIDER: ${LLM_PROVIDER:-openrouter}
+      CHAT_USE_CELERY: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - martani-test
+      - martani-shared
+
+  celery-chat-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: martani-test-celery-chat-worker
+    restart: unless-stopped
+    command: celery -A app.core.celery_app:celery_app worker --loglevel=info --concurrency=4 -Q chat
+    volumes:
+      - ../backend:/app
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-cloudai}:${DB_PASSWORD:-CHANGE_ME_DB_PASSWORD}@postgres:5432/${DB_NAME:-martani_test}
+      REDIS_URL: redis://redis:6379
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-CHANGE_ME_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-CHANGE_ME_MINIO_SECRET_KEY}
+      MINIO_BUCKET: martani-storage
+      MINIO_SECURE: "false"
+      LLM_PROVIDER: ${LLM_PROVIDER:-openrouter}
+      CHAT_USE_CELERY: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - martani-test
+      - martani-shared
+
+  frontend:
+    image: node:20-alpine
+    container_name: martani-test-frontend
+    working_dir: /app
+    ports:
+      - "${FRONTEND_PORT:-3010}:3000"
+    volumes:
+      - ../frontend:/app
+      - martani_test_node_modules:/app/node_modules
+      - martani_test_next_build:/app/.next
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8010}
+      HOSTNAME: "0.0.0.0"
+    command: sh -c "npm install && npm run dev -- -p 3000"
+    depends_on:
+      - backend
+    networks:
+      - martani-test
+
+volumes:
+  martani_test_postgres:
+    driver: local
+  martani_test_redis:
+    driver: local
+  martani_test_node_modules:
+    driver: local
+  martani_test_next_build:
+    driver: local
+
+networks:
+  martani-test:
+    driver: bridge
+  martani-shared:
+    external: true
