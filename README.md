@@ -4,6 +4,23 @@ Martani AI Cloud is a self-hosted AI workspace that combines file storage, RAG-b
 
 This public repository is a sanitized open version prepared for review and collaboration. Local secrets, internal operational notes, and private environment files are intentionally excluded.
 
+## Highlights
+
+- Store, browse, and share files in a self-hosted workspace
+- Index documents and run RAG-style chat on top of them
+- Keep credentials and protected assets in a secure vault
+- Run scheduled automation and data pipeline jobs
+- Operate the stack with admin tools for users, settings, and usage
+
+## Product Layers
+
+- `AI Drive`
+  - Store files, index them, search them, and use them in AI workflows.
+- `AI Assistant`
+  - Ask questions, retrieve knowledge from your files, and perform task-oriented actions.
+- `Data Ops`
+  - Collect external data, transform it, and deliver it through reusable pipelines.
+
 ## What It Does
 
 - File storage and explorer UI
@@ -19,17 +36,6 @@ This public repository is a sanitized open version prepared for review and colla
   - Bridge
   - Pipelines
 - Admin tools for settings, users, tool registry, and usage
-
-## Core Product Direction
-
-Martani is best understood as three connected layers:
-
-- `AI Drive`
-  - Store files, index them, search them, and use them in AI workflows.
-- `AI Assistant`
-  - Ask questions, retrieve knowledge from your files, and perform task-oriented actions.
-- `Data Ops`
-  - Collect external data, transform it, and deliver it through reusable pipelines.
 
 ## Tech Stack
 
